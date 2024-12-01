@@ -4,7 +4,7 @@ session_start();
 if(!isset($_SESSION['admin']) || isset($_SESSION['user']) || isset($_SESSION['user'])){
 	echo "<script>window.location.replace('../index.php');</script>";
 }
-$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
+$conn = mysqli_connect('localhost','root','280704','qlbh') or die('Không thể kết nối!');
 $sql = "SELECT * FROM sanpham";
 $result = mysqli_query($conn, $sql);
 $_SESSION['total'] = mysqli_num_rows($result);

@@ -379,21 +379,22 @@ footer{
 
 .prd-in-cart{
 	width: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
 	background-color: #e6e6e6;
 	border: 1px solid black;
-	position: relative;
 	margin-bottom: 10px;
 }
 .prd-in-cart:hover{
 	background-color: #c1c1c1;
 }
 .prd-in-cart img{
-	max-height: 140px;
+	height: 140px;
+	width: 140px;
 }
 .prd-dt{
-	position: absolute;
-	left: 110px;
-	top: -10px;
+
 }
 .prd-price{
 	color: red;

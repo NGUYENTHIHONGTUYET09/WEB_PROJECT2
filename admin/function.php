@@ -1,7 +1,7 @@
 <?php 
 $conn;
 function connect(){
-	$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
+	$conn = mysqli_connect('localhost','root','280704','qlbh') or die('Không thể kết nối!');
 	return $conn;
 }
 function disconnect($conn){

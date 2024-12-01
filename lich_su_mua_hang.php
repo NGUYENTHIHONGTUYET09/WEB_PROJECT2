@@ -3,7 +3,7 @@ session_start();
 // Access the user session variable
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 // Kết nối cơ sở dữ liệu
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
 if (!$conn) {
     die("Kết nối thất bại: " . mysqli_connect_error());
 }
