@@ -1,42 +1,48 @@
-<?php 
+<?php
 $conn;
-function connect(){
-	$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
-	return $conn;
+function connect()
+{
+    $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh') or die('Không thể kết nối!');
+    return $conn;
 }
-function disconnect($conn){
-	mysqli_close($conn);
+function disconnect($conn)
+{
+    mysqli_close($conn);
 }
-function validate_input_sql($conn, $str){
-	return mysqli_real_escape_string($conn, $str);
+function validate_input_sql($conn, $str)
+{
+    return mysqli_real_escape_string($conn, $str);
 }
 $q = "";
-if(isset($_POST['q'])){
-	$q = $_POST['q'];
+if (isset($_POST['q'])) {
+    $q = $_POST['q'];
 }
 $fname = "";
-if(isset($_GET['fname'])){
-	$fname = $_GET['fname'];
+if (isset($_GET['fname'])) {
+    $fname = $_GET['fname'];
 }
-if($fname == "load_more"){
-	load_more();
+if ($fname == "load_more") {
+    load_more();
 }
 
-function load_more(){
-	session_start();
-	$cr = '';
-	if(isset($_GET['current'])){$cr = $_GET['current'];}
-	$st = ($cr+1)*$_SESSION['limit'];
-	if($st >= $_SESSION['total'] - $_SESSION['limit']){
-		echo "Đã hết mục để hiển thị";
-	}
-	$sql = "SELECT * FROM sanpham s, danhmucsp d WHERE s.madm = d.madm ORDER BY ngay_nhap DESC LIMIT ".$st.",".$_SESSION['limit']."";
-	$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
-	mysqli_set_charset($conn, 'utf8');
-	$result = mysqli_query($conn, $sql);
-	$i = $st;
-	while ($row = mysqli_fetch_assoc($result)){
-		?>
+function load_more()
+{
+    session_start();
+    $cr = '';
+    if (isset($_GET['current'])) {
+        $cr = $_GET['current'];
+    }
+    $st = ($cr + 1) * $_SESSION['limit'];
+    if ($st >= $_SESSION['total'] - $_SESSION['limit']) {
+        echo "Đã hết mục để hiển thị";
+    }
+    $sql = "SELECT * FROM sanpham s, danhmucsp d WHERE s.madm = d.madm ORDER BY ngay_nhap DESC LIMIT " . $st . "," . $_SESSION['limit'] . "";
+    $conn = mysqli_connect('localhost', 'root', '', 'qlbh') or die('Không thể kết nối!');
+    mysqli_set_charset($conn, 'utf8');
+    $result = mysqli_query($conn, $sql);
+    $i = $st;
+    while ($row = mysqli_fetch_assoc($result)) {
+?>
 <tr>
     <td><?php echo ++$i ?></td>
     <td><?php echo $row['tensp'] ?></td>
@@ -53,101 +59,105 @@ function load_more(){
 </tr>
 
 <?php
-	}
+    }
 }
 
 
 switch ($q) {
-	case 'xoa_sp':
-	xoa_sp();
-	break;
-	case 'them_dm':
-	them_dm();
-	break;
-	case 'xoa_dm':
-	xoa_dm();
-	break;
-	case 'giaodich_chuagh':
-	giaodich_chuagh();
-	break;
-	case 'giaodich_dagh':
-	giaodich_dagh();
-	break;
-	case 'giaodich_tatcagh':
-	giaodich_tatcagh();
-	break;
-	case 'them_admin':
-	them_admin();
-	break;
-	case 'xoa_taikhoan':
-	xoa_taikhoan();
-	break;
-	case 'sua_sp':
-	sua_sp();
-	break;
+    case 'xoa_sp':
+        xoa_sp();
+        break;
+    case 'them_dm':
+        them_dm();
+        break;
+    case 'xoa_dm':
+        xoa_dm();
+        break;
+    case 'giaodich_chuagh':
+        giaodich_chuagh();
+        break;
+    case 'giaodich_dagh':
+        giaodich_dagh();
+        break;
+    case 'giaodich_tatcagh':
+        giaodich_tatcagh();
+        break;
+    case 'them_admin':
+        them_admin();
+        break;
+    case 'xoa_taikhoan':
+        xoa_taikhoan();
+        break;
+    case 'sua_sp':
+        sua_sp();
+        break;
 }
 
 
 
-function xoa_sp(){
-	if (isset($_POST['q']) && $_POST['q'] === 'xoa_sp' && isset($_POST['masp_xoa'])) {
-		$masp = $_POST['masp_xoa'];
-	
-		// Kết nối cơ sở dữ liệu
-		$conn = connect();
-	
-		// Truy vấn xóa sản phẩm
-		$sql = "DELETE FROM sanpham WHERE masp = '" . mysqli_real_escape_string($conn, $masp) . "'";
-	
-		if (mysqli_query($conn, $sql)) {
-			echo "Xóa thành công!";
-		} else {
-			echo "Đã xảy ra lỗi!";
-		}
-	
-		// Đóng kết nối
-		disconnect($conn);
-	}
+function xoa_sp()
+{
+    if (isset($_POST['q']) && $_POST['q'] === 'xoa_sp' && isset($_POST['masp_xoa'])) {
+        $masp = $_POST['masp_xoa'];
+
+        // Kết nối cơ sở dữ liệu
+        $conn = connect();
+
+        // Truy vấn xóa sản phẩm
+        $sql = "DELETE FROM sanpham WHERE masp = '" . mysqli_real_escape_string($conn, $masp) . "'";
+
+        if (mysqli_query($conn, $sql)) {
+            echo "Xóa thành công!";
+        } else {
+            echo "Đã xảy ra lỗi!";
+        }
+
+        // Đóng kết nối
+        disconnect($conn);
+    }
 }
-function them_dm(){
-$tendm = $_POST['tendm'];
-$xuatsu = $_POST['xuatsu'];
-$conn = connect();
-$sql = "INSERT INTO danhmucsp VALUES (' ','".$tendm."','".$xuatsu."')";
-if(mysqli_query($conn, $sql)){
-echo "<script>
+function them_dm()
+{
+    $tendm = $_POST['tendm'];
+    $xuatsu = $_POST['xuatsu'];
+    $conn = connect();
+    $sql = "INSERT INTO danhmucsp VALUES (' ','" . $tendm . "','" . $xuatsu . "')";
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>
 alert('Thêm danh mục thành công!')
 </script>";
-} else {
-echo "<script>
+    } else {
+        echo "<script>
 alert('Đã xảy ra lỗi!')
 </script>";
+    }
 }
-}
-function xoa_dm(){
-$madm = $_POST['madm_xoa'];
-$conn = connect();
-$sql = "DELETE FROM danhmucsp WHERE madm = '".$madm."'";
-if(mysqli_query($conn, $sql)){
-echo "<script>
+function xoa_dm()
+{
+    $madm = $_POST['madm_xoa'];
+    $conn = connect();
+    $sql = "DELETE FROM danhmucsp WHERE madm = '" . $madm . "'";
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>
 alert('Xóa thành công!')
 </script>";
-} else {
-echo "<script>
+    } else {
+        echo "<script>
 alert('Lỗi! Bạn phải xóa hết những sản phẩm thuộc danh mục này trước!')
 </script>";
-}
+    }
 }
 
 //Danh sach giao dich sap xep
-function giaodich_chuagh(){
-session_start();
-$conn = connect();
-mysqli_set_charset($conn, 'utf8');
-echo $_SESSION['limit'];
-$sql = "SELECT * FROM giaodich WHERE tinhtrang = 0";
-$i = 1;
-$result = mysqli_query($conn, $sql); ?>
+function giaodich_chuagh()
+{
+    session_start();
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    echo $_SESSION['limit'];
+    $sql = "SELECT * FROM giaodich WHERE tinhtrang = 0";
+    $i = 1;
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -164,12 +174,13 @@ $result = mysqli_query($conn, $sql); ?>
 </thead>
 <tbody id="gd_chuagd_body">
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
         <td><?php echo $i++ ?></td>
-        <td><?php if($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>"; else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
+        <td><?php if ($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>";
+                    else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
         </td>
         <td><?php echo $row['user_name'] ?></td>
         <td><?php echo $row['user_dst'] ?></td>
@@ -180,19 +191,20 @@ $result = mysqli_query($conn, $sql); ?>
 
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 
 <?php
-	disconnect($conn);
+    disconnect($conn);
 }
-function giaodich_dagh(){
-	session_start();
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM giaodich WHERE tinhtrang = 1";
-	$i = 1;
-	$result = mysqli_query($conn, $sql); ?>
+function giaodich_dagh()
+{
+    session_start();
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM giaodich WHERE tinhtrang = 1";
+    $i = 1;
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -209,12 +221,13 @@ function giaodich_dagh(){
 </thead>
 <tbody id="gd_dagd_body">
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
         <td><?php echo $i++ ?></td>
-        <td><?php if($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>"; else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
+        <td><?php if ($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>";
+                    else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
         </td>
         <td><?php echo $row['user_name'] ?></td>
         <td><?php echo $row['user_dst'] ?></td>
@@ -225,19 +238,20 @@ function giaodich_dagh(){
         <td></td>
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 
 <?php
-	disconnect($conn);
+    disconnect($conn);
 }
-function giaodich_tatcagh(){
-	session_start();
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM giaodich";
-	$i = 1;
-	$result = mysqli_query($conn, $sql); ?>
+function giaodich_tatcagh()
+{
+    session_start();
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM giaodich";
+    $i = 1;
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -253,12 +267,13 @@ function giaodich_tatcagh(){
 </thead>
 <tbody id="gd_tatcagd_body">
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
         <td><?php echo $i++ ?></td>
-        <td><?php if($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>"; else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
+        <td><?php if ($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>";
+                    else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
         </td>
         <td><?php echo $row['user_name'] ?></td>
         <td><?php echo $row['user_dst'] ?></td>
@@ -269,14 +284,15 @@ function giaodich_tatcagh(){
 
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 
 <?php
-	disconnect($conn);
+    disconnect($conn);
 }
 
-function them_admin() {
+function them_admin()
+{
     $conn = connect();
 
     // Kiểm tra và nhận dữ liệu từ AJAX
@@ -339,61 +355,63 @@ function them_admin() {
 }
 
 
-function xoa_taikhoan(){
-	$id = $_POST['id_tk_xoa'];
-	$conn = connect();
-	$sql = "DELETE FROM thanhvien WHERE id = '".$id."'";
-	if(!mysqli_query($conn, $sql)){
-		echo "Đã xảy ra lỗi!";
-	} else {
-		echo "<script>alert('Xóa xong!')</script>";
-	}
-	disconnect($conn);
+function xoa_taikhoan()
+{
+    $id = $_POST['id_tk_xoa'];
+    $conn = connect();
+    $sql = "DELETE FROM thanhvien WHERE id = '" . $id . "'";
+    if (!mysqli_query($conn, $sql)) {
+        echo "Đã xảy ra lỗi!";
+    } else {
+        echo "<script>alert('Xóa xong!')</script>";
+    }
+    disconnect($conn);
 }
 
-function sua_sp() {
-	$masp = isset($_POST['masp_sua']) ? $_POST['masp_sua'] : null;
-	$tensp = isset($_POST['tensp_ed']) ? $_POST['tensp_ed'] : null;
-	$gia = isset($_POST['gia_ed']) ? $_POST['gia_ed'] : null;
-	$khuyenmai = isset($_POST['khuyenmai_ed']) ? $_POST['khuyenmai_ed'] : null;
-	$tinhtrang = isset($_POST['tinhtrang_ed']) ? $_POST['tinhtrang_ed'] : null;
+function sua_sp()
+{
+    $masp = isset($_POST['masp_sua']) ? $_POST['masp_sua'] : null;
+    $tensp = isset($_POST['tensp_ed']) ? $_POST['tensp_ed'] : null;
+    $gia = isset($_POST['gia_ed']) ? $_POST['gia_ed'] : null;
+    $khuyenmai = isset($_POST['khuyenmai_ed']) ? $_POST['khuyenmai_ed'] : null;
+    $tinhtrang = isset($_POST['tinhtrang_ed']) ? $_POST['tinhtrang_ed'] : null;
 
-	// Chuẩn bị mảng dữ liệu cập nhật
-	$set = [];
-	if ($tensp !== null && $tensp !== "") {
-			$set[] = "tensp = '" . mysqli_real_escape_string(connect(), $tensp) . "'";
-	}
-	if ($gia !== null && $gia !== "") {
-			$set[] = "gia = '" . mysqli_real_escape_string(connect(), $gia) . "'";
-	}
-	if ($khuyenmai !== null && $khuyenmai !== "") {
-			$set[] = "khuyenmai = '" . mysqli_real_escape_string(connect(), $khuyenmai) . "'";
-	}
-	if ($tinhtrang !== null && $tinhtrang !== "") {
-			$set[] = "tinhtrang = '" . mysqli_real_escape_string(connect(), $tinhtrang) . "'";
-	}
+    // Chuẩn bị mảng dữ liệu cập nhật
+    $set = [];
+    if ($tensp !== null && $tensp !== "") {
+        $set[] = "tensp = '" . mysqli_real_escape_string(connect(), $tensp) . "'";
+    }
+    if ($gia !== null && $gia !== "") {
+        $set[] = "gia = '" . mysqli_real_escape_string(connect(), $gia) . "'";
+    }
+    if ($khuyenmai !== null && $khuyenmai !== "") {
+        $set[] = "khuyenmai = '" . mysqli_real_escape_string(connect(), $khuyenmai) . "'";
+    }
+    if ($tinhtrang !== null && $tinhtrang !== "") {
+        $set[] = "tinhtrang = '" . mysqli_real_escape_string(connect(), $tinhtrang) . "'";
+    }
 
-	// Kết hợp các phần tử của mảng `set` thành chuỗi
-	$str = implode(", ", $set);
+    // Kết hợp các phần tử của mảng `set` thành chuỗi
+    $str = implode(", ", $set);
 
-	// Nếu không có gì để cập nhật
-	if (empty($str)) {
-			echo "<script>alert('Không có gì để cập nhật.');</script>";
-			return;
-	}
+    // Nếu không có gì để cập nhật
+    if (empty($str)) {
+        echo "<script>alert('Không có gì để cập nhật.');</script>";
+        return;
+    }
 
-	$conn = connect();
-	$sql = "UPDATE sanpham SET $str WHERE masp = '" . mysqli_real_escape_string($conn, $masp) . "'";
+    $conn = connect();
+    $sql = "UPDATE sanpham SET $str WHERE masp = '" . mysqli_real_escape_string($conn, $masp) . "'";
 
-	if (mysqli_query($conn, $sql)) {
-			// Hiển thị thông báo và reload lại trang
-			echo "<script>
+    if (mysqli_query($conn, $sql)) {
+        // Hiển thị thông báo và reload lại trang
+        echo "<script>
 							alert('Cập nhật thành công!');
 							window.location.reload(); // Reload trang hiện tại
 						</script>";
-	} else {
-			echo "Đã xảy ra lỗi: " . mysqli_error($conn);
-	}
+    } else {
+        echo "Đã xảy ra lỗi: " . mysqli_error($conn);
+    }
 
-	disconnect($conn);
+    disconnect($conn);
 }

@@ -1,5 +1,3 @@
-giaodich.php
-
 <?php 
 
 session_start();
@@ -168,41 +166,52 @@ if (!$last_magd) {
     return;
 }
 
-
-$sql_multi = [];
-if (isset($_SESSION['buynow'])) {
-    if ($sl[0] > 0) { // Chỉ thêm sản phẩm nếu số lượng lớn hơn 0
-        $sql_multi[] = "('{$last_magd}', '{$_SESSION['buynow']}', '{$sl[0]}')";
-    }
-} else {
-    $cart = ($_SESSION['rights'] === "user") ? $_SESSION['user_cart'] : $_SESSION['client_cart'];
-    array_shift($cart); // Bỏ phần tử đầu tiên nếu cần (trường hợp không liên quan).
-    foreach ($cart as $index => $masp) {
-        if (isset($sl[$index]) && $sl[$index] > 0) { // Kiểm tra chỉ mục và số lượng hợp lệ
-            $sql_multi[] = "('{$last_magd}', '{$masp}', '{$sl[$index]}')";
+// Thêm chi tiết giao dịch vào bảng chitietgiaodich
+for ($i = 0; $i < count($sl); $i++) {
+    // Kiểm tra sản phẩm có trong session hay không
+    if (isset($_SESSION['product_ids'][$i])) {
+        $masp = $_SESSION['product_ids'][$i]; // Mã sản phẩm từ session
+    } else {
+        // Truy vấn cơ sở dữ liệu để lấy mã sản phẩm
+        $product_name = $_SESSION['product_names'][$i];
+        $sql = "SELECT masp FROM sanpham WHERE tensp = '$product_name' LIMIT 1";
+        $result = mysqli_query($conn, $sql);
+        if ($row = mysqli_fetch_assoc($result)) {
+            $masp = $row['masp']; // Lấy mã sản phẩm
+        } else {
+            echo "Không tìm thấy mã sản phẩm: $product_name";
+            continue;
         }
     }
-}
+    
+    $quantity = $sl[$i];
+    $price = $_SESSION['cost'][$i];
+    $total = $quantity * $price;
 
-if (!empty($sql_multi)) {
-    $sql_query = "INSERT INTO chitietgiaodich (magd, masp, soluong) VALUES " . implode(',', $sql_multi);
-    if (!mysqli_query($conn, $sql_query)) {
-        error_log("Error inserting chitietgiaodich: " . mysqli_error($conn));
-        echo "<script>alert('Lỗi trong quá trình xử lý đơn hàng.');</script>";
-        return;
+    // Thêm chi tiết giao dịch vào bảng chitietgiaodich
+    $sql_detail = "INSERT INTO chitietgiaodich (magd, masp, soluong) 
+                   VALUES ('$last_magd', '$masp', '$quantity')";
+    if (!mysqli_query($conn, $sql_detail)) {
+        error_log("Error inserting into chitietgiaodich: " . mysqli_error($conn));
+        echo "<script>alert('Đã xảy ra lỗi khi thêm chi tiết giao dịch!');</script>";
     }
 }
 
-// Xóa sản phẩm khỏi giỏ hàng trong cơ sở dữ liệu
+// Xóa sản phẩm đã đặt khỏi giỏ hàng trong cơ sở dữ liệu
 if ($_SESSION['rights'] === 'user') {
-    $userId = $_SESSION['user']['id']; // Lấy ID người dùng từ session
-    $sql_delete_cart = "DELETE FROM giohang WHERE user_id = '$userId'"; // Xóa các sản phẩm trong giỏ hàng của người dùng
-    if (!mysqli_query($conn, $sql_delete_cart)) {
-        error_log("Error deleting products from cart: " . mysqli_error($conn));
-        echo "<script>alert('Lỗi khi xóa sản phẩm khỏi giỏ hàng.');</script>";
-    }
-}
+	$userId = $_SESSION['user']['id']; // Lấy ID người dùng từ session
+	$last_magd = $last_magd; // Lấy ID đơn hàng đã được tạo trước đó
 
+	// Chỉ xóa các sản phẩm trong giỏ hàng đã được đặt (dựa trên ID đơn hàng)
+	$sql_delete_cart = "DELETE FROM giohang WHERE user_id = '$userId' AND masp IN (SELECT masp FROM chitietgiaodich WHERE magd = '$last_magd')";
+	
+	if (!mysqli_query($conn, $sql_delete_cart)) {
+			error_log("Error deleting ordered products from cart: " . mysqli_error($conn));
+			echo "<script>alert('Lỗi khi xóa sản phẩm khỏi giỏ hàng.');</script>";
+	} else {
+			echo "<script>alert('Sản phẩm đã được xóa khỏi giỏ hàng!');</script>";
+	}
+}
 
 require_once 'layout/second_footer.php';
 

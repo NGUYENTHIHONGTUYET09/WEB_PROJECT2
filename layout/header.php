@@ -1,47 +1,47 @@
 <?php
-    session_start();
-    $_SESSION['rights'] = "default";
-    $_SESSION['limit'] = 8;
-    $cartCount = 0;
-    // Định nghĩa hàm connect()
-    function connect()
-    {
-        $conn = mysqli_connect('localhost', 'root', '', 'qlbh');
-        if (!$conn) {
-            die('Kết nối thất bại: ' . mysqli_connect_error());
-        }
-        mysqli_set_charset($conn, 'utf8'); // Đặt charset
-        return $conn; // Trả về kết nối
+session_start();
+$_SESSION['rights'] = "default";
+$_SESSION['limit'] = 8;
+$cartCount = 0;
+// Định nghĩa hàm connect()
+function connect()
+{
+    $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
+    if (!$conn) {
+        die('Kết nối thất bại: ' . mysqli_connect_error());
     }
-    $conn = connect(); // Gọi hàm connect() đã định nghĩa
-    //Khi đăng nhập thì tự động sẽ sinh ra 1 usidtf và kiểm tra trong csdl có tài khoản đó không
-    if (isset($_COOKIE['usidtf'])) {
-        $s = "SELECT * FROM thanhvien WHERE id = '" . $_COOKIE['usidtf'] . "'";
-        $result = mysqli_query($conn, $s);
-        while ($row = mysqli_fetch_assoc($result)) {
-            $_SESSION['user'] = $row;
-        }
+    mysqli_set_charset($conn, 'utf8'); // Đặt charset
+    return $conn; // Trả về kết nối
+}
+$conn = connect(); // Gọi hàm connect() đã định nghĩa
+//Khi đăng nhập thì tự động sẽ sinh ra 1 usidtf và kiểm tra trong csdl có tài khoản đó không
+if (isset($_COOKIE['usidtf'])) {
+    $s = "SELECT * FROM thanhvien WHERE id = '" . $_COOKIE['usidtf'] . "'";
+    $result = mysqli_query($conn, $s);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $_SESSION['user'] = $row;
     }
-    $_SESSION['sql'] = "SELECT * FROM sanpham";
-    $sql = "SELECT * FROM sanpham";
-    $result = mysqli_query($conn, $sql);
-    if (!$result) {
-        die('Query failed: ' . mysqli_error($conn));
-    }
-    $_SESSION['total'] = mysqli_num_rows($result);
-    $_SESSION['user_cart'] = []; // Khởi tạo mảng cho giỏ hàng
-    $myString = []; // Khởi tạo mảng cho myString
-    $myString[0] = "tmp"; // Gán giá trị vào vị trí 0 của mảng
-    if (isset($_SESSION['user'])) {
-        $_SESSION['rights'] = "user";
-        $_SESSION['like'] = []; // Khởi tạo mảng cho sở thích
-        $_SESSION['like'][0] = "tmp";
-        $user = $_SESSION['user'];
-        $user_id = $user['id'];
+}
+$_SESSION['sql'] = "SELECT * FROM sanpham";
+$sql = "SELECT * FROM sanpham";
+$result = mysqli_query($conn, $sql);
+if (!$result) {
+    die('Query failed: ' . mysqli_error($conn));
+}
+$_SESSION['total'] = mysqli_num_rows($result);
+$_SESSION['user_cart'] = []; // Khởi tạo mảng cho giỏ hàng
+$myString = []; // Khởi tạo mảng cho myString
+$myString[0] = "tmp"; // Gán giá trị vào vị trí 0 của mảng
+if (isset($_SESSION['user'])) {
+    $_SESSION['rights'] = "user";
+    $_SESSION['like'] = []; // Khởi tạo mảng cho sở thích
+    $_SESSION['like'][0] = "tmp";
+    $user = $_SESSION['user'];
+    $user_id = $user['id'];
 
 
-        //$_SESSION['user']['id'] là mã định danh (ID) của người dùng đó, giúp phân biệt người này với những người dùng khác.
-        $sql = "SELECT *
+    //$_SESSION['user']['id'] là mã định danh (ID) của người dùng đó, giúp phân biệt người này với những người dùng khác.
+    $sql = "SELECT *
                 FROM 
                     lich_su_mua_hang lsmh
                 INNER JOIN 
@@ -51,26 +51,25 @@
                 WHERE 
                     lsmh.user_id = $user_id AND lsmh.trang_thai = 'Giỏ hàng'
                 ";
-        $result = mysqli_query($conn, $sql);
-        // count($result)
-        if ($result) {
-            $cartCount = mysqli_num_rows($result);
-        }
+    $result = mysqli_query($conn, $sql);
+    // count($result)
+    if ($result) {
+        $cartCount = mysqli_num_rows($result);
+    }
 
-        //$_SESSION['user']['id'] là mã định danh (ID) của người dùng đó, giúp phân biệt người này với những người dùng khác.
+    //$_SESSION['user']['id'] là mã định danh (ID) của người dùng đó, giúp phân biệt người này với những người dùng khác.
     $sql = "SELECT masp, soluong FROM giohang WHERE user_id = '" . $_SESSION['user']['id'] . "'";
     $result = mysqli_query($conn, $sql);
     while ($row = mysqli_fetch_assoc($result)) {
-    $_SESSION['user_cart'][] = $row['masp']; // Thêm sản phẩm vào giỏ hàng
+        $_SESSION['user_cart'][] = $row['masp']; // Thêm sản phẩm vào giỏ hàng
     }
 
     $sql = "SELECT masp FROM sanphamyeuthich WHERE user_id = '" . $_SESSION['user']['id'] . "'";
     $result = mysqli_query($conn, $sql);
     while ($row = mysqli_fetch_assoc($result)) {
-    $_SESSION['like'][] = $row['masp']; // Thêm sản phẩm yêu thích
+        $_SESSION['like'][] = $row['masp']; // Thêm sản phẩm yêu thích
     }
-
-    }
+}
 ?>
 
 
@@ -97,26 +96,26 @@
     <link rel="stylesheet" type="text/css" href="libs/animate.css">
 
     <script type="text/javascript">
-    $(document).ready(function() {
-        $(".cart-container").click(function() {
-            $(this).toggleClass('cart-ordered');
+        $(document).ready(function() {
+            $(".cart-container").click(function() {
+                $(this).toggleClass('cart-ordered');
+            });
+            $(".unlike-container").click(function() {
+                if ($('#s-s').data("stt") == "alreadysignin") {
+                    $(this).toggleClass('liked');
+                }
+            });
         });
-        $(".unlike-container").click(function() {
-            if ($('#s-s').data("stt") == "alreadysignin") {
-                $(this).toggleClass('liked');
+        $(document).on("click", function() {
+            $(".showup").hide();
+        });
+        window.onkeyup = function(e) {
+            var x = $('#srch-val').val();
+            var y = $("#srch-val").is(":focus");
+            if (e.keyCode == 13 && y && x != "") {
+                ajax_search();
             }
-        });
-    });
-    $(document).on("click", function() {
-        $(".showup").hide();
-    });
-    window.onkeyup = function(e) {
-        var x = $('#srch-val').val();
-        var y = $("#srch-val").is(":focus");
-        if (e.keyCode == 13 && y && x != "") {
-            ajax_search();
         }
-    }
     </script>
 </head>
 
@@ -129,28 +128,28 @@
 
 
 
-            <?php 
-      if($_SESSION['rights'] == "default"){ ?>
-            <li><a onclick='ajax_dangnhap()' id="s-s" data-stt='nosignin'>Đăng nhập</a>
-                <div class='mn-ef'></div>
-            </li>
-            <li><a onclick='ajax_dangky()'>Đăng ký</a>
-                <div class='mn-ef'></div>
-            </li>
+            <?php
+            if ($_SESSION['rights'] == "default") { ?>
+                <li><a onclick='ajax_dangnhap()' id="s-s" data-stt='nosignin'>Đăng nhập</a>
+                    <div class='mn-ef'></div>
+                </li>
+                <li><a onclick='ajax_dangky()'>Đăng ký</a>
+                    <div class='mn-ef'></div>
+                </li>
             <?php } else { ?>
-            <li><a onclick="$('#user-setting').toggle()" id="s-s" data-stt='alreadysignin'>Chào
-                    <?php echo $_SESSION['user']['ten'] ?></a>
-                <div class='mn-ef'></div>
-            </li>
-            <div id='user-setting'>
-                <ul>
-                    <li onclick="call_to_thongtin();$('#user-setting').toggle()">Thông tin tài khoản</li>
-                    <br />
-                    <li onclick='call_to_dangxuat()'>Đăng xuất</li>
-                </ul>
-            </div>
+                <li><a onclick="$('#user-setting').toggle()" id="s-s" data-stt='alreadysignin'>Chào
+                        <?php echo $_SESSION['user']['ten'] ?></a>
+                    <div class='mn-ef'></div>
+                </li>
+                <div id='user-setting'>
+                    <ul>
+                        <li onclick="call_to_thongtin();$('#user-setting').toggle()">Thông tin tài khoản</li>
+                        <br />
+                        <li onclick='call_to_dangxuat()'>Đăng xuất</li>
+                    </ul>
+                </div>
             <?php }
-      ?>
+            ?>
 
             <li data-userid="<?php echo isset($_SESSION['user']) ? $_SESSION['user']['id'] : ''; ?>"
                 onclick="ajax_giohang()">
@@ -159,12 +158,12 @@
 
             </li>
             <?php if (isset($_SESSION['rights']) && $_SESSION['rights'] !== "default" && isset($_SESSION['user'])) { ?>
-            <li>
-                <a href="lich_su_mua_hang.php" class="btn btn-info"
-                    style="margin-top: 5px; color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px;">
-                    Lịch sử mua hàng
-                </a>
-            </li>
+                <li>
+                    <a href="lich_su_mua_hang.php" class="btn btn-info"
+                        style="margin-top: 5px; color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px;">
+                        Lịch sử mua hàng
+                    </a>
+                </li>
             <?php } ?>
 
             <div class="mn-ef"></div>
@@ -217,7 +216,9 @@
                             <li><a onclick="ajax_danhmucsp('dam')">Đầm</a></li>
                             <li><a onclick="ajax_danhmucsp('phu_kien')">Phụ kiện</a></li>
                         </ul>
+
                     </li>
+
                     <li class="menu-name" id="dgg"><a onclick="ajax_saling()">Đang giảm giá</a></li>
                     <li class="menu-name" id="spm"><a onclick="ajax_new()">Sản phẩm mới</a></li>
                     <li class="menu-name" id="mntq"><a onclick="ajax_buy()">Mua nhiều tuần qua</a></li>
@@ -251,17 +252,17 @@
                 <div onclick="ajax_giohang()" style="cursor: pointer;">
                     <i class="glyphicon glyphicon-shopping-cart navbar-right btn-lg" id="cart_count">
                         <?php
-                   
-        if ($_SESSION['rights'] == "default") {
-            if (isset($_SESSION['client_cart'])) {
-                echo count($_SESSION['client_cart']);
-            } else {
-                echo "0";  // Mặc định là 0 nếu không có giỏ hàng
-            }
-        } else {
-            echo max(count($_SESSION['user_cart']), 0);  // Tránh số lượng giỏ hàng âm
-        }
-        ?>
+
+                        if ($_SESSION['rights'] == "default") {
+                            if (isset($_SESSION['client_cart'])) {
+                                echo count($_SESSION['client_cart']);
+                            } else {
+                                echo "0";  // Mặc định là 0 nếu không có giỏ hàng
+                            }
+                        } else {
+                            echo max(count($_SESSION['user_cart']), 0);  // Tránh số lượng giỏ hàng âm
+                        }
+                        ?>
                     </i>
                 </div>
 

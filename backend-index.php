@@ -1,29 +1,31 @@
-<?php 
+<?php
 
 // Kết nối đến cơ sở dữ liệu
 if (!function_exists('connect')) {
-    function connect() {
-    $conn = mysqli_connect('localhost', 'root', '', 'qlbh');
-    if (!$conn) {
-        die("Kết nối thất bại: " . mysqli_connect_error());
+    function connect()
+    {
+        $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
+        if (!$conn) {
+            die("Kết nối thất bại: " . mysqli_connect_error());
+        }
+        return $conn;
     }
-    return $conn;
 }
 
-}
-
-function disconnect($conn) {
+function disconnect($conn)
+{
     if ($conn) {
         mysqli_close($conn);
     }
 }
 
 // Lấy 3 sản phẩm mới nhất
-function get_3_newest() {
+function get_3_newest()
+{
     $conn = connect();
     mysqli_set_charset($conn, 'utf8');
     $sql = "SELECT * FROM sanpham ORDER BY ngay_nhap DESC LIMIT 4";
-    
+
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -32,10 +34,10 @@ function get_3_newest() {
         return;
     }
 
-    $i = 1; 
+    $i = 1;
     while ($row = mysqli_fetch_assoc($result)) {
         $activeClass = ($i == 1) ? 'active' : ''; // Đảm bảo chỉ có 1 sản phẩm được đánh dấu là active
-        ?>
+?>
 <div class='item <?php echo $activeClass; ?>'>
     <img src="<?php echo htmlspecialchars($row['anhchinh']); ?>" alt="<?php echo htmlspecialchars($row['tensp']); ?>">
     <div class='container'>
@@ -52,7 +54,8 @@ function get_3_newest() {
 }
 
 // Lấy sản phẩm mua nhiều nhất
-function get_buy_the_most() {
+function get_buy_the_most()
+{
     // Kết nối cơ sở dữ liệu
     $conn = connect();
 
@@ -91,7 +94,7 @@ function get_buy_the_most() {
         $anhchinh = htmlspecialchars($row['anhchinh'] ?? '');
         $tensp = htmlspecialchars($row['tensp'] ?? '');
         $gia = htmlspecialchars($row['gia'] ?? 0);
-        ?>
+    ?>
 <div class='product-container' onclick="hien_sanpham('<?php echo $masp; ?>')">
     <a data-toggle='modal' href='sanpham.php?masp=<?php echo $masp; ?>' data-target='#modal-id'>
         <div style="text-align: center;" class='product-img'>
@@ -101,21 +104,22 @@ function get_buy_the_most() {
             <h4><b><?php echo $tensp; ?></b></h4>
             <b class='price'>Giá: <?php echo number_format($gia, 0, ',', '.'); ?> VND</b>
             <div class='buy'>
-                <a onclick="like_action('<?php echo $masp; ?>')" class='btn btn-default btn-md unlike-container <?php
-                                if (isset($_SESSION['rights']) && $_SESSION['rights'] == 'user' && isset($_SESSION['like']) && in_array($masp, $_SESSION['like'])) {
-                                    echo 'liked';
-                                }
-                            ?>'>
+                <a onclick="like_action('<?php echo $masp; ?>')"
+                    class='btn btn-default btn-md unlike-container <?php
+                                                                                                                        if (isset($_SESSION['rights']) && $_SESSION['rights'] == 'user' && isset($_SESSION['like']) && in_array($masp, $_SESSION['like'])) {
+                                                                                                                            echo 'liked';
+                                                                                                                        }
+                                                                                                                        ?>'>
                     <i class='glyphicon glyphicon-heart unlike'></i>
                 </a>
-                <a class='btn btn-primary btn-md cart-container <?php 
-                                if (isset($_SESSION['rights'])) {
-                                    if ($_SESSION['rights'] == "default" && isset($_SESSION['client_cart']) && in_array($masp, $_SESSION['client_cart'])) {
-                                        echo 'cart-ordered';
-                                    } elseif ($_SESSION['rights'] != "default" && isset($_SESSION['user_cart']) && in_array($masp, $_SESSION['user_cart'])) {
-                                        echo 'cart-ordered';
-                                    }
-                                } ?>' data-masp="<?php echo $masp; ?>"
+                <a class='btn btn-primary btn-md cart-container <?php
+                                                                        if (isset($_SESSION['rights'])) {
+                                                                            if ($_SESSION['rights'] == "default" && isset($_SESSION['client_cart']) && in_array($masp, $_SESSION['client_cart'])) {
+                                                                                echo 'cart-ordered';
+                                                                            } elseif ($_SESSION['rights'] != "default" && isset($_SESSION['user_cart']) && in_array($masp, $_SESSION['user_cart'])) {
+                                                                                echo 'cart-ordered';
+                                                                            }
+                                                                        } ?>' data-masp="<?php echo $masp; ?>"
                     onclick="addtocart_action('<?php echo $masp; ?>')">
                     <i title='Thêm vào giỏ hàng' class='glyphicon glyphicon-shopping-cart cart-item'></i>
                 </a>
@@ -134,7 +138,8 @@ function get_buy_the_most() {
 
 
 //Gần đây nhất
-function get_the_most_recent() {
+function get_the_most_recent()
+{
     // Kết nối cơ sở dữ liệu
     $conn = connect();
     if (!$conn) {
@@ -165,7 +170,7 @@ function get_the_most_recent() {
             $anhchinh = htmlspecialchars($row['anhchinh'] ?? '');
             $tensp = htmlspecialchars($row['tensp'] ?? '');
             $gia = htmlspecialchars($row['gia'] ?? 0);
-            ?>
+        ?>
 <div class='product-container' onclick="hien_sanpham('<?php echo $masp; ?>')">
     <a data-toggle='modal' href='sanpham.php?masp=<?php echo $masp; ?>' data-target='#modal-id'>
         <div style="text-align: center;" class='product-img'>
@@ -175,21 +180,22 @@ function get_the_most_recent() {
             <h4><b><?php echo $tensp; ?></b></h4>
             <b class='price'>Giá: <?php echo number_format($gia, 0, ',', '.'); ?> VND</b>
             <div class='buy'>
-                <a onclick="like_action('<?php echo $masp; ?>')" class='btn btn-default btn-md unlike-container <?php
-                                if (isset($_SESSION['rights']) && $_SESSION['rights'] == 'user' && isset($_SESSION['like']) && in_array($masp, $_SESSION['like'])) {
-                                    echo 'liked';
-                                }
-                            ?>'>
+                <a onclick="like_action('<?php echo $masp; ?>')"
+                    class='btn btn-default btn-md unlike-container <?php
+                                                                                                                            if (isset($_SESSION['rights']) && $_SESSION['rights'] == 'user' && isset($_SESSION['like']) && in_array($masp, $_SESSION['like'])) {
+                                                                                                                                echo 'liked';
+                                                                                                                            }
+                                                                                                                            ?>'>
                     <i class='glyphicon glyphicon-heart unlike'></i>
                 </a>
-                <a class='btn btn-primary btn-md cart-container <?php 
-                                if (isset($_SESSION['rights'])) {
-                                    if ($_SESSION['rights'] == "default" && isset($_SESSION['client_cart']) && in_array($masp, $_SESSION['client_cart'])) {
-                                        echo 'cart-ordered';
-                                    } elseif ($_SESSION['rights'] != "default" && isset($_SESSION['user_cart']) && in_array($masp, $_SESSION['user_cart'])) {
-                                        echo 'cart-ordered';
-                                    }
-                                } ?>' data-masp="<?php echo $masp; ?>"
+                <a class='btn btn-primary btn-md cart-container <?php
+                                                                            if (isset($_SESSION['rights'])) {
+                                                                                if ($_SESSION['rights'] == "default" && isset($_SESSION['client_cart']) && in_array($masp, $_SESSION['client_cart'])) {
+                                                                                    echo 'cart-ordered';
+                                                                                } elseif ($_SESSION['rights'] != "default" && isset($_SESSION['user_cart']) && in_array($masp, $_SESSION['user_cart'])) {
+                                                                                    echo 'cart-ordered';
+                                                                                }
+                                                                            } ?>' data-masp="<?php echo $masp; ?>"
                     onclick="addtocart_action('<?php echo $masp; ?>')">
                     <i title='Thêm vào giỏ hàng' class='glyphicon glyphicon-shopping-cart cart-item'></i>
                 </a>
@@ -216,52 +222,50 @@ function get_the_most_recent() {
 
 
 $q = "";
-if(isset($_POST['query'])){
-	$q = $_POST['query'];
+if (isset($_POST['query'])) {
+    $q = $_POST['query'];
 }
 $m = "";
-if(isset($_POST['masp_to_display'])){
-	$m = $_POST['masp_to_display'];
+if (isset($_POST['masp_to_display'])) {
+    $m = $_POST['masp_to_display'];
 }
 
 switch ($q) {
-	case 'dang_nhap':
-	signin();
-	break;
-	case 'dang_xuat':
-	signout();
-	break;
-	case 'dang_ky':
-	signup();
-	break;
-	case 'addtocart_action':
-	addtocart_action();
-	break;
-	case 'hien_sanpham':
-	hien_sanpham($m);
-	break;
-	case 'tinh_tien':
-	tinh_tien();
-	break;
-	case 'like':
-	like();
-	break;
-	case 'thongtin_user':
-	thongtin_user();
-	break;
+    case 'dang_nhap':
+        signin();
+        break;
+    case 'dang_xuat':
+        signout();
+        break;
+    case 'dang_ky':
+        signup();
+        break;
+    case 'addtocart_action':
+        addtocart_action();
+        break;
+    case 'hien_sanpham':
+        hien_sanpham($m);
+        break;
+    case 'tinh_tien':
+        tinh_tien();
+        break;
+    case 'like':
+        like();
+        break;
+    case 'thongtin_user':
+        thongtin_user();
+        break;
     case 'xoasanpham':
         xoasanpham();
         break;
-    
-	case 'php_edit_info_db':
-	php_edit_info_db();
-	break;
 
-
-
+    case 'php_edit_info_db':
+        php_edit_info_db();
+        break;
 }
 
-function get_cart_count() {
+function get_cart_count()
+{
     session_start();
     $conn = connect();
 
@@ -283,7 +287,8 @@ function get_cart_count() {
     echo $count;
 }
 
-function addtocart_action() {
+function addtocart_action()
+{
     session_start();
     $conn = connect(); // Kết nối cơ sở dữ liệu
 
@@ -320,14 +325,13 @@ function addtocart_action() {
         $result_cart = mysqli_query($conn, $sql_cart);
 
         // Khởi tạo lại session giỏ hàng
-        $_SESSION[$cart_name] = []; 
+        $_SESSION[$cart_name] = [];
 
         if ($result_cart) {
             while ($row = mysqli_fetch_assoc($result_cart)) {
                 $_SESSION[$cart_name][] = $row['masp']; // Đồng bộ tất cả sản phẩm vào session
             }
         }
-
     } else {
         // Xử lý cho người dùng không đăng nhập
         if (!in_array($masp, $_SESSION[$cart_name])) {
@@ -338,8 +342,9 @@ function addtocart_action() {
     echo count($_SESSION[$cart_name]);
 }
 
-  
-function xoasanpham() {
+
+function xoasanpham()
+{
     session_start();
     $conn = connect();
     $masp = $_POST['masp'] ?? '';
@@ -369,101 +374,105 @@ function xoasanpham() {
 
 
 
-function tinh_tien() {
-session_start();
+function tinh_tien()
+{
+    session_start();
 
-if (!isset($_SESSION['user_cart']) || empty($_SESSION['user_cart'])) {
-echo json_encode(['total' => 0, 'message' => 'Giỏ hàng trống.']);
-return;
+    if (!isset($_SESSION['user_cart']) || empty($_SESSION['user_cart'])) {
+        echo json_encode(['total' => 0, 'message' => 'Giỏ hàng trống.']);
+        return;
+    }
+
+    $total = 0;
+
+    foreach ($_SESSION['user_cart'] as $item) {
+        // Giả sử mỗi item có 'price' và 'quantity'
+        $total += $item['price'] * $item['quantity'];
+    }
+
+    // Nếu cần thêm phí hoặc thuế
+    $tax_rate = 0.1; // 10% thuế
+    $total_with_tax = $total * (1 + $tax_rate);
+
+    echo json_encode([
+        'total' => number_format($total_with_tax, 2, '.', ''),
+        'message' => 'Tổng số tiền đã tính thành công.'
+    ]);
 }
 
-$total = 0;
 
-foreach ($_SESSION['user_cart'] as $item) {
-// Giả sử mỗi item có 'price' và 'quantity'
-$total += $item['price'] * $item['quantity'];
-}
+function signin()
+{
+    session_start();
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $un = $pw = $isR = "";
 
-// Nếu cần thêm phí hoặc thuế
-$tax_rate = 0.1; // 10% thuế
-$total_with_tax = $total * (1 + $tax_rate);
+    if (isset($_POST['un'])) {
+        $un = $_POST['un'];
+    }
+    if (isset($_POST['isR'])) {
+        $isR = $_POST['isR'];
+    }
+    if (isset($_POST['pw'])) {
+        $pw = $_POST['pw'];
+    }
 
-echo json_encode([
-'total' => number_format($total_with_tax, 2, '.', ''),
-'message' => 'Tổng số tiền đã tính thành công.'
-]);
-}
+    if ($un == "" || $pw == "") {
+        echo "<div class='errorMes'>Không được để trống!</div>";
+        require_once 'signIn.php';
+        return 0;
+    }
 
+    // Prepare and execute the SQL query
+    $sql = "SELECT * FROM thanhvien WHERE tentaikhoan = '" . $un . "' AND matkhau = '" . $pw . "'";
+    $result = mysqli_query($conn, $sql);
 
-function signin(){
-session_start();
-$conn = connect();
-mysqli_set_charset($conn, 'utf8');
-$un = $pw = $isR = "";
+    // Check if the query was successful
+    if (!$result) {
+        echo "<div class='errorMes'>Lỗi truy vấn: " . mysqli_error($conn) . "</div>"; // Display error message
+        require_once 'signIn.php';
+        return 0;
+    }
 
-if(isset($_POST['un'])){
-$un = $_POST['un'];
-}
-if(isset($_POST['isR'])){
-$isR = $_POST['isR'];
-}
-if(isset($_POST['pw'])){
-$pw = $_POST['pw'];
-}
-
-if($un == "" || $pw == ""){
-echo "<div class='errorMes'>Không được để trống!</div>";
-require_once 'signIn.php';
-return 0;
-}
-
-// Prepare and execute the SQL query
-$sql = "SELECT * FROM thanhvien WHERE tentaikhoan = '".$un."' AND matkhau = '".$pw."'";
-$result = mysqli_query($conn, $sql);
-
-// Check if the query was successful
-if (!$result) {
-echo "<div class='errorMes'>Lỗi truy vấn: " . mysqli_error($conn) . "</div>"; // Display error message
-require_once 'signIn.php';
-return 0;
-}
-
-if(mysqli_num_rows($result) == 0){
-echo "<div class='errorMes'>Sai tên tài khoản hoặc mật khẩu!</div>";
-require_once 'signIn.php';
-return 0;
-} else {
-while ($row = mysqli_fetch_assoc($result)) {
-if($row['quyen'] == 1){
-$_SESSION['admin'] = "ok";
-echo "<script>
+    if (mysqli_num_rows($result) == 0) {
+        echo "<div class='errorMes'>Sai tên tài khoản hoặc mật khẩu!</div>";
+        require_once 'signIn.php';
+        return 0;
+    } else {
+        while ($row = mysqli_fetch_assoc($result)) {
+            if ($row['quyen'] == 1) {
+                $_SESSION['admin'] = "ok";
+                echo "<script>
 window.location.replace('admin/foradmin.php');
 </script>";
-return 0;
-}
-if($isR == "true"){
-echo "vao roi ne";
-$cookie_name = "usidtf";
-$cookie_value = $row['id'];
-setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
-}
-$_SESSION['user'] = $row;
-echo "<script>
+                return 0;
+            }
+            if ($isR == "true") {
+                echo "vao roi ne";
+                $cookie_name = "usidtf";
+                $cookie_value = $row['id'];
+                setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/");
+            }
+            $_SESSION['user'] = $row;
+            echo "<script>
 location.reload()
 </script>";
-}
-}
+        }
+    }
 }
 
-function signout(){
-session_start();
-session_destroy();
-setcookie("usidtf", "", time() - (86400 * 30), "/");
-echo "<script>
+function signout()
+{
+    session_start();
+    session_destroy();
+    setcookie("usidtf", "", time() - (86400 * 30), "/");
+    echo "<script>
 location.reload()
 </script>";
 }
-function signup() {
+function signup()
+{
     session_start();
     $conn = connect();
     mysqli_set_charset($conn, 'utf8');
@@ -601,12 +610,14 @@ function signup() {
 
 
 
-function hien_sanpham($m){
-$_GET['masp'] = $m;
-require_once 'sanpham.php';
+function hien_sanpham($m)
+{
+    $_GET['masp'] = $m;
+    require_once 'sanpham.php';
 }
 
-function like() {
+function like()
+{
     session_start();
 
     // Lấy mã sản phẩm từ POST
@@ -677,9 +688,10 @@ function like() {
 
 
 
-function thongtin_user(){
-session_start();
-?>
+function thongtin_user()
+{
+    session_start();
+    ?>
 <script type="text/javascript">
 function edit_info() {
     $($('#info-user').children()[2]).replaceWith("<h4>Tên: <input type='text' id='name2c'></h4>");
@@ -739,14 +751,16 @@ function ajax_edit_info() {
 <?php
 }
 
-function validate_input_sql($conn, $str) {
+function validate_input_sql($conn, $str)
+{
     return mysqli_real_escape_string($conn, $str);
 }
 
-function php_edit_info_db() {
+function php_edit_info_db()
+{
     session_start();
     $ten = $mk = $dc = $sdt = $email = "";
-    
+
     if (isset($_POST['ten'])) {
         $ten = $_POST['ten'];
     }
@@ -762,45 +776,45 @@ function php_edit_info_db() {
     if (isset($_POST['mk'])) {
         $mk = $_POST['mk'];
     }
-    
+
     $n = [];
     $data = [];
     $set = '';
-    
+
     $conn = connect(); // Kết nối cơ sở dữ liệu
 
     if ($ten != "") {
-        $n[] = 'ten'; 
+        $n[] = 'ten';
         $data[] = validate_input_sql($conn, $ten);
     }
     if ($mk != "") {
-        $n[] = 'matkhau'; 
+        $n[] = 'matkhau';
         $data[] = validate_input_sql($conn, $mk); // Sửa lại biến
     }
     if ($dc != "") {
-        $n[] = 'diachi'; 
+        $n[] = 'diachi';
         $data[] = validate_input_sql($conn, $dc); // Sửa lại biến
     }
     if ($sdt != "") {
-        $n[] = 'sodt'; 
+        $n[] = 'sodt';
         $data[] = validate_input_sql($conn, $sdt);
     }
     if ($email != "") {
-        $n[] = 'email'; 
+        $n[] = 'email';
         $data[] = validate_input_sql($conn, $email);
     }
-    
+
     // Tạo chuỗi gán cho câu lệnh SQL
     for ($i = 0; $i < count($n); $i++) {
         $set .= $n[$i] . "='" . $data[$i] . "',";
         $_SESSION['user'][$n[$i]] = $data[$i]; // Cập nhật session
     }
-    
+
     $set = trim($set, ','); // Bỏ dấu phẩy ở cuối
-    
+
     // Thực hiện câu lệnh UPDATE
     $sql = "UPDATE thanhvien SET $set WHERE id = '" . $_SESSION['user']['id'] . "'";
-    
+
     if (!mysqli_query($conn, $sql)) {
         echo "<span class='label label-danger'>Đã xảy lỗi trong quá trình gửi dữ liệu, vui lòng thử lại!</span>";
     } else {
@@ -809,7 +823,7 @@ function php_edit_info_db() {
                 location.reload();
               </script>";
     }
-    
+
     // Đóng kết nối
     mysqli_close($conn);
 }

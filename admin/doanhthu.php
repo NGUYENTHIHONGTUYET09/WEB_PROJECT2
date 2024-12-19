@@ -1,6 +1,6 @@
 <?php
 // Kết nối cơ sở dữ liệu
-$conn = new mysqli("localhost", "root", "", "qlbh");
+$conn = new mysqli("localhost", "root", "280704", "qlbh");
 
 // Kiểm tra kết nối
 if ($conn->connect_error) {
@@ -43,4 +43,3 @@ $conn->close();
 
 // Trả về JSON
 echo json_encode(['months' => $months, 'totals' => $totals]);
-?>

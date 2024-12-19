@@ -1,5 +1,3 @@
-ajax_calling.php
-
 <?php
 
 require_once 'backend-index.php';

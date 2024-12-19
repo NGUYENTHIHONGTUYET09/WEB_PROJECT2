@@ -1,15 +1,18 @@
-<?php 
+<?php
 $conn;
-function connect(){
-	$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
-	return $conn;
+function connect()
+{
+    $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh') or die('Không thể kết nối!');
+    return $conn;
 }
-function disconnect($conn){
-	mysqli_close($conn);
+function disconnect($conn)
+{
+    mysqli_close($conn);
 }
 
 
-function displayCategorySelect() {
+function displayCategorySelect()
+{
     // Kết nối đến cơ sở dữ liệu
     $connect = connect();
     $str = "SELECT * FROM danhmucsp"; // Truy vấn lấy danh mục sản phẩm
@@ -26,11 +29,12 @@ function displayCategorySelect() {
 
 
 //Danh sach thanh vien
-function member_list(){
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM thanhvien ORDER BY ngaytao DESC";
-	$result = mysqli_query($conn, $sql); ?>
+function member_list()
+{
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM thanhvien ORDER BY ngaytao DESC";
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -48,7 +52,7 @@ function member_list(){
 </thead>
 <tbody>
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
@@ -60,22 +64,24 @@ function member_list(){
         <td><?php echo $row['sodt'] ?></td>
         <td><?php echo $row['email'] ?></td>
         <td><?php echo $row['ngaytao'] ?></td>
-        <td><?php if($row['quyen'])echo "Admin"; else echo "User";  ?></td>
+        <td><?php if ($row['quyen']) echo "Admin";
+                    else echo "User";  ?></td>
         <td><span class="btn btn-danger" onclick="xoa_taikhoan('<?php echo $row["id"] ?>')">Xóa</span></td>
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 <?php
-	disconnect($conn);
+    disconnect($conn);
 }
 //Danh sach giao dich
-function exchange_list(){
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM giaodich WHERE tinhtrang = 0";
-	$i = 1;
-	$result = mysqli_query($conn, $sql); ?>
+function exchange_list()
+{
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM giaodich WHERE tinhtrang = 0";
+    $i = 1;
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -91,12 +97,13 @@ function exchange_list(){
 </thead>
 <tbody id="body-gd-list">
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
         <td><?php echo $i++ ?></td>
-        <td><?php if($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>"; else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
+        <td><?php if ($row['tinhtrang']) echo "<h4 class='label label-success'>Đã hoàn tất</h4>";
+                    else echo "<h4 class='label label-danger'>Chưa hoàn tất</h4>";  ?>
         </td>
         <td><?php echo $row['user_name'] ?></td>
         <td><?php echo $row['user_dst'] ?></td>
@@ -106,18 +113,19 @@ function exchange_list(){
         <td><?php echo $row['date'] ?></td>
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 
 <?php
-	disconnect($conn);
+    disconnect($conn);
 }
 //Danh sach danh muc san pham
-function type_list(){
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM danhmucsp";
-	$result = mysqli_query($conn, $sql); ?>
+function type_list()
+{
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM danhmucsp";
+    $result = mysqli_query($conn, $sql); ?>
 
 <thead>
     <tr>
@@ -129,7 +137,7 @@ function type_list(){
 </thead>
 <tbody>
 
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
 
 
     <tr>
@@ -141,13 +149,14 @@ function type_list(){
         </td>
     </tr>
 
-    <?php }	?>
+    <?php }    ?>
 </tbody>
 
 <?php
 }
 //Danh sach san pham
-function product_list(){
+function product_list()
+{
     $conn = connect();
     mysqli_set_charset($conn, 'utf8');
     $sql = "SELECT * FROM sanpham s, danhmucsp d WHERE s.madm = d.madm ORDER BY ngay_nhap DESC";
@@ -199,15 +208,16 @@ function product_list(){
 
 
 //in ra cac loai sp
-function list_type_pr_for_add(){
-	$conn = connect();
-	mysqli_set_charset($conn, 'utf8');
-	$sql = "SELECT * FROM danhmucsp";
-	?> <select class="form-control" id="madm"> <?php
-	$result = mysqli_query($conn, $sql); ?>
-    <?php while ($row = mysqli_fetch_assoc($result)){?>
+function list_type_pr_for_add()
+{
+    $conn = connect();
+    mysqli_set_charset($conn, 'utf8');
+    $sql = "SELECT * FROM danhmucsp";
+?> <select class="form-control" id="madm"> <?php
+                                                $result = mysqli_query($conn, $sql); ?>
+    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
     <option value="<?php echo $row['madm'] ?>"><?php echo $row['tendm'] ?></option>
-    <?php }	?>
+    <?php }    ?>
 </select>
 <?php
 }

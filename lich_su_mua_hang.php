@@ -10,7 +10,7 @@ if (!is_string($userId) || empty($userId)) {
 }
 
 // Kết nối cơ sở dữ liệu
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
 if (!$conn) {
     die("Kết nối thất bại: " . mysqli_connect_error());
 }
@@ -19,9 +19,10 @@ if (!$conn) {
 if (isset($_POST['action']) && $_POST['action'] == 'da_nhan' && isset($_POST['magd'])) {
     $magd = $_POST['magd'];
     $tinhtrang = 1;
-    $ngaynhan = date('Y-m-d H:i:s');
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
+    $now = date("Y-m-d H:i:s");
 
-    $update_query = "UPDATE giaodich SET tinhtrang = '$tinhtrang', ngaynhan = '$ngaynhan' WHERE magd = '$magd' AND user_id = '$userId'";
+    $update_query = "UPDATE giaodich SET tinhtrang = '$tinhtrang', ngaynhan = '$now' WHERE magd = '$magd' AND user_id = '$userId'";
     if (mysqli_query($conn, $update_query)) {
         echo "Cập nhật thành công!";
     } else {

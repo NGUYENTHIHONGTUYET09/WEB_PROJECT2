@@ -7,7 +7,7 @@ $_SESSION['rights'] = "default";
 $_SESSION['limit'] = 8;
 
 // Kết nối cơ sở dữ liệu
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh') or die('Không thể kết nối!');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh') or die('Không thể kết nối!');
 mysqli_set_charset($conn, 'utf8');
 
 // Khởi tạo và thực hiện truy vấn

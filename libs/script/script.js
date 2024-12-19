@@ -416,3 +416,23 @@ function ajax_like() {
     });
 }
 
+// function ajax_danhmucsp(tendm) {
+// 	$('#spm').removeClass('ajaxing');
+// 	$('#mntq').removeClass('ajaxing');
+// 	$('#dgg').removeClass('ajaxing');
+
+// 	$.ajax({
+// 			url: "ajax_calling.php",
+// 			type: "GET",
+// 			dataType: "text",
+// 			data: {
+// 					fname: 'php_danhmucsp',
+// 					detail: tendm
+// 			},
+// 			success: function(result) {
+// 					$('#content').html(result);
+// 			}
+// 	});
+// }
+
+

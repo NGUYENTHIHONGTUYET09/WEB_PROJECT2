@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
 if (!$conn) {
     die("Kết nối thất bại: " . mysqli_connect_error());
 }
@@ -10,13 +10,20 @@ if (isset($_POST['action']) && isset($_POST['magd'])) {
 
     if ($_POST['action'] == 'da_nhan') {
         $tinhtrang = 1;
-        $ngaynhan = date('Y-m-d H:i:s');
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $now = date('Y-m-d H:i:s');
 
-        $update_query = "UPDATE giaodich SET tinhtrang = '$tinhtrang', ngaynhan = '$ngaynhan' WHERE magd = '$magd'";
+        $update_query = "UPDATE giaodich SET tinhtrang = '$tinhtrang', ngaynhan = '$now' WHERE magd = '$magd'";
         if (mysqli_query($conn, $update_query)) {
-            echo "Cập nhật thành công!";
+            echo "<script>
+                alert('Cập nhật thành công!');
+                window.location.href = 'lich_su_mua_hang.php';
+            </script>";
         } else {
-            echo "Lỗi cập nhật: " . mysqli_error($conn);
+            $error_message = mysqli_error($conn);
+            echo "<script>
+                alert('Lỗi cập nhật: $error_message');
+            </script>";
         }
     } elseif ($_POST['action'] == 'chi_tiet') {
         $detail_query = "

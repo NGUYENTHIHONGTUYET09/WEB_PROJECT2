@@ -3,7 +3,7 @@
 $data = json_decode(file_get_contents('php://input'), true);
 $id = $data['id'];
 // Kiểm tra ngày dự kiến nhận hàng
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
 $sql = "SELECT ngay_du_kien_nhan FROM lich_su_mua_hang WHERE id = $id";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
@@ -19,4 +19,3 @@ if (strtotime($ngay_du_kien_nhan) < strtotime($ngay_hien_tai . ' - 3 days')) {
     echo json_encode(['message' => 'Đã yêu cầu trả hàng']);
 }
 mysqli_close($conn);
-?>

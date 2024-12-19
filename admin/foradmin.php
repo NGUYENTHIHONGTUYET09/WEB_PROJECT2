@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 session_start();
-if(!isset($_SESSION['admin']) || isset($_SESSION['user']) || isset($_SESSION['user'])){
-	echo "<script>window.location.replace('../index.php');</script>";
+if (!isset($_SESSION['admin']) || isset($_SESSION['user']) || isset($_SESSION['user'])) {
+    echo "<script>window.location.replace('../index.php');</script>";
 }
-$conn = mysqli_connect('localhost','root','','qlbh') or die('Không thể kết nối!');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh') or die('Không thể kết nối!');
 $sql = "SELECT * FROM sanpham";
 $result = mysqli_query($conn, $sql);
 $_SESSION['total'] = mysqli_num_rows($result);
@@ -205,9 +205,9 @@ $_SESSION['gd_chua'] = mysqli_num_rows($result);
                                 <select id="category-select" class="form-control" name="category_id"
                                     style="font-size: 1.5rem; height: 5rem;">
                                     <option value="">Tất cả các loại sản phẩm</option>
-                                    <?php 
+                                    <?php
                                     // Kết nối cơ sở dữ liệu và lấy danh mục sản phẩm
-                                    require_once 'function.php'; 
+                                    require_once 'function.php';
                                     $conn = connect();
                                     mysqli_set_charset($conn, 'utf8');
                                     $sql = "SELECT madm, tendm FROM danhmucsp"; // Lấy mã và tên danh mục
@@ -285,7 +285,8 @@ $_SESSION['gd_chua'] = mysqli_num_rows($result);
                         <!-- Danh sách sản phẩm -->
                         <div class="table-responsive">
                             <table class="table table-hover table-striped table-bordered" id="tbl-sanpham-list">
-                                <?php require_once 'function.php'; product_list(); ?>
+                                <?php require_once 'function.php';
+                                product_list(); ?>
                             </table>
                         </div>
 
@@ -420,7 +421,8 @@ $_SESSION['gd_chua'] = mysqli_num_rows($result);
 
                                 </thead>
                                 <tbody>
-                                    <?php require_once 'function.php'; member_list(); ?>
+                                    <?php require_once 'function.php';
+                                    member_list(); ?>
                                 </tbody>
                             </table>
                         </div>
@@ -448,7 +450,8 @@ $_SESSION['gd_chua'] = mysqli_num_rows($result);
                                 <thead class="table-dark">
                                 </thead>
                                 <tbody>
-                                    <?php require_once 'function.php'; exchange_list(); ?>
+                                    <?php require_once 'function.php';
+                                    exchange_list(); ?>
                                 </tbody>
                             </table>
                         </div>
@@ -494,7 +497,8 @@ $_SESSION['gd_chua'] = mysqli_num_rows($result);
                                 <thead class="table-dark">
                                 </thead>
                                 <tbody>
-                                    <?php require_once 'function.php'; type_list(); ?>
+                                    <?php require_once 'function.php';
+                                    type_list(); ?>
                                 </tbody>
                             </table>
                         </div>

@@ -1,8 +1,9 @@
 <?php
 session_start();
 
-function connect() {
-    $conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+function connect()
+{
+    $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
     if (!$conn) {
         die('Kết nối thất bại: ' . mysqli_connect_error());
     }
@@ -14,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'delete_from_l
     $masp = intval($_POST['masp']);
     $like_count = 0;
 
-    if (isset($_SESSION['user']['id'])) { 
+    if (isset($_SESSION['user']['id'])) {
         // Đăng nhập: Xóa sản phẩm trong CSDL
         $user_id = $_SESSION['user']['id'];
         $conn = connect();
@@ -54,4 +55,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'delete_from_l
     ]);
     exit;
 }
-?>

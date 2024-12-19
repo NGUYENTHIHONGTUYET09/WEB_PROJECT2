@@ -1,6 +1,6 @@
 <?php
 // Kết nối cơ sở dữ liệu
-$conn = new mysqli("localhost", "root", "", "qlbh");
+$conn = new mysqli("localhost", "root", "280704", "qlbh");
 
 // Kiểm tra kết nối
 if ($conn->connect_error) {
@@ -22,4 +22,3 @@ if ($result->num_rows > 0) {
 // Trả về danh sách các năm dưới dạng JSON
 echo json_encode($years);
 $conn->close();
-?>

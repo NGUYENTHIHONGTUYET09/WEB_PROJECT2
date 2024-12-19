@@ -6,7 +6,7 @@ if (!$id) {
     exit;
 }
 
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
 if (!$conn) {
     echo json_encode(['message' => 'Không thể kết nối cơ sở dữ liệu: ' . mysqli_connect_error()]);
     exit;
@@ -38,4 +38,3 @@ if (strtotime($ngay_du_kien_nhan) < strtotime($ngay_hien_tai . ' - 3 days')) {
     }
 }
 mysqli_close($conn);
-?>

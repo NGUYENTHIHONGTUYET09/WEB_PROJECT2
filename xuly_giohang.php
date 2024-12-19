@@ -2,8 +2,9 @@
 session_start();
 
 // Hàm kết nối database
-function connect() {
-    $conn = mysqli_connect('localhost', 'root', '', 'qlbh');
+function connect()
+{
+    $conn = mysqli_connect('localhost', 'root', '280704', 'qlbh');
     if (!$conn) {
         die('Kết nối thất bại: ' . mysqli_connect_error());
     }
@@ -51,4 +52,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'add_to_cart')
     mysqli_close($conn);
     exit;
 }
-?>

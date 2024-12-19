@@ -383,3 +383,5 @@ VALUES ('futureuser@gmail.com', 'password123', '2025-01-01'); -- Ngày sinh tron
 -- Trường hợp không hợp lệ (chưa đủ 14 tuổi):
 INSERT INTO nguoidung (email, password, birth_date)
 VALUES ('younguser@gmail.com', 'password123', '2012-12-14'); -- Chưa đủ 14 tuổi
+
+     

@@ -1,6 +1,6 @@
 <?php
 // Kết nối cơ sở dữ liệu
-$conn = mysqli_connect('localhost', 'root', '', 'qlbh'); // Thay 'qlbh' bằng tên cơ sở dữ liệu của bạn
+$conn = mysqli_connect('localhost', 'root', '280704', 'qlbh'); // Thay 'qlbh' bằng tên cơ sở dữ liệu của bạn
 if (!$conn) {
     die("Kết nối thất bại: " . mysqli_connect_error());
 }
@@ -12,7 +12,7 @@ $result = mysqli_query($conn, $sql);
 // Kiểm tra và hiển thị sản phẩm
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        ?>
+?>
 <div class="product-container" onclick="hien_sanpham('<?php echo $row['masp']; ?>')">
     <a href="sanpham.php?masp=<?php echo $row['masp']; ?>" data-toggle="modal" data-target="#modal-id">
         <img src="<?php echo $row['anhchinh']; ?>" class="product-img" alt="<?php echo $row['tensp']; ?>">
@@ -36,9 +36,9 @@ if (mysqli_num_rows($result) > 0) {
             </a>
 
             <a class="btn btn-primary btn-lg cart-container 
-                        <?php echo ($_SESSION['rights'] == "default" && in_array($row['masp'], $_SESSION['client_cart'])) || 
-                                   ($_SESSION['rights'] != "default" && in_array($row['masp'], $_SESSION['user_cart'])) 
-                                   ? 'cart-ordered' : ''; ?>" data-masp="<?php echo $row['masp']; ?>">
+                        <?php echo ($_SESSION['rights'] == "default" && in_array($row['masp'], $_SESSION['client_cart'])) ||
+                            ($_SESSION['rights'] != "default" && in_array($row['masp'], $_SESSION['user_cart']))
+                            ? 'cart-ordered' : ''; ?>" data-masp="<?php echo $row['masp']; ?>">
                 <i title="Thêm vào giỏ hàng" class="glyphicon glyphicon-shopping-cart cart-item"></i>
             </a>
 
